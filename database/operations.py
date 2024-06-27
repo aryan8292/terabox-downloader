@@ -10,12 +10,11 @@ async def insert_terabox_links(user_id, file_type, sizes, original_caption, orig
         try:
             cursor = await db.execute('''INSERT INTO terabox_links
                                 (user_id, file_type, sizes, original_caption, original_thumbnail, unique_string)
-                                VALUES (?, ?, ?, ?, ?, ?)
-                                RETURNING id''',
+                                VALUES (?, ?, ?, ?, ?, ?)''',
                              (user_id, file_type, sizes, original_caption, original_thumbnail, unique_string))
-            row = await cursor.fetchone()
+            
             await db.commit()
-            return row[0] 
+            return cursor.lastrowid 
         except Exception as e:
             logger.error(f"Error inserting terabox link: {e}")
             raise
